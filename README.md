@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🚀 Discord All-in-One Bot (No-AI)
+# 🚀 Discord All-in-One Bot
 
   <p><b>Bot Discord Serba Ada Tanpa AI — Moderasi, Ekonomi, Musik, Utilitas, Analitik & Web Dashboard!</b></p>
 
