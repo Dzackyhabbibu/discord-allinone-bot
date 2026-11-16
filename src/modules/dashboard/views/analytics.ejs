@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics - Dashboard</title>
+  <link rel="stylesheet" href="/dashboard/public/main.css">
+  <style>
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .stat-card { background: #1e1f22; border: 1px solid #30363d; border-radius: 8px; padding: 1.5rem; text-align: center; }
+    .stat-card .value { font-size: 2rem; font-weight: 700; color: #5865F2; }
+    .stat-card .label { font-size: 0.85rem; color: #b9c0c7; margin-top: 0.25rem; }
+    .chart-placeholder { background: #1e1f22; border: 1px solid #30363d; border-radius: 8px; padding: 1.5rem; text-align: center; color: #b9c0c7; }
+    .history-list { max-height: 400px; overflow-y: auto; }
+    .history-item { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #30363d; }
+    .history-item:last-child { border-bottom: none; }
+  </style>
+</head>
+<body>
+  <div class="main-content">
+    <a href="/guilds" class="back-link">← Back to Servers</a>
+    <div class="page-header">
+      <h1>📈 Server Analytics</h1>
+      <a href="/" class="btn btn-outline btn-sm">← Dashboard</a>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="value"><%= guild.member_count || guildId %></div>
+        <div class="label">Members</div>
+      </div>
+      <div class="stat-card">
+        <div class="value" style="color:#27ae60;"><%= online || 0 %></div>
+        <div class="label">Online</div>
+      </div>
+      <div class="stat-card">
+        <div class="value" style="color:#5865F2;"><%= total_xp || 0 %></div>
+        <div class="label">Total XP</div>
+      </div>
+      <div class="stat-card">
+        <div class="value" style="color:#27ae60;"><%= total_coins || 0 %></div>
+        <div class="label">Total Coins</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:1.5rem;">
+      <h2>📊 Growth Trends</h2>
+      <div class="chart-placeholder">
+        <p>📈 Chart visualization (line chart of member growth, channel activity, etc.) would render here.</p>
+        <p>In a full build, this could use Chart.js to display:</p>
+        <ul>
+          <li>Daily member joins/leaves</li>
+          <li>Most active channels</li>
+          <li>XP growth over time</li>
+          <li>Mod action frequency</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:1.5rem;">
+      <h2>📋 Recent Activity</h2>
+      <div class="history-list">
+        <% if (typeof logs !== 'undefined' && logs.length > 0) { %>
+          <% logs.slice(0, 10).forEach(log => { %>
+            <div class="history-item">
+              <span><%= log.type %></span>
+              <span class="text-muted" style="font-size:0.85rem;"><%= new Date(log.issued_at).toLocaleString() %></span>
+            </div>
+          <% }); %>
+        <% } else { %>
+          <p class="text-muted">No activity recorded.</p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

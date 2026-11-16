@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Restore Backup - Dashboard</title>
+  <link rel="stylesheet" href="/dashboard/public/main.css">
+</head>
+<body>
+  <div class="main-content">
+    <a href="/guilds" class="back-link">← Back to Servers</a>
+    <div class="page-header">
+      <h1>🔄 Restore Backup</h1>
+      <a href="/" class="btn btn-outline btn-sm">← Dashboard</a>
+    </div>
+
+    <div class="card">
+      <p class="text-muted">Select a backup to restore. This will overwrite current settings.</p>
+      <form action="/guild/<%= guildId %>/restore" method="POST">
+        <div class="form-group">
+          <label>Select Backup</label>
+          <select name="backup_id" required>
+            <option value="">Choose...</option>
+            <% if (backups && backups.length > 0) { %>
+              <% backups.forEach(b => { %>
+                <option value="<%= b.backup_id %>"><%= new Date(b.timestamp).toLocaleString() %> (ID: <%= b.backup_id %>)</option>
+              <% }) %>
+            <% } else { %>
+              <option value="">No backups available</option>
+            <% } %>
+          </select>
+        </div>
+        <div class="flex" style="justify-content:space-between;">
+          <a href="/guild/<%= guildId %>/backup" class="btn btn-outline">Back to Backups</a>
+          <button type="submit" class="btn btn-danger">Restore</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

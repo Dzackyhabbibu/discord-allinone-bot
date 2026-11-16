@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Servers - Dashboard</title>
+  <link rel="stylesheet" href="/dashboard/public/main.css">
+  <style>
+    .servers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem; }
+    @media (max-width: 600px) { .servers-grid { grid-template-columns: 1fr; } }
+    .server-card { background: #1e1f22; border: 1px solid #30363d; border-radius: 8px; padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+    .server-card h2 { font-size: 1.15rem; margin-bottom: 0.5rem; }
+    .server-card .server-id { font-size: 0.8rem; color: #b9c0c7; margin-bottom: 0.75rem; }
+    .server-card .server-actions { display: flex; gap: 0.5rem; margin-top: 1rem; }
+    .server-card .server-actions .btn { flex: 1; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="main-content">
+    <div class="page-header">
+      <h1>📦 Servers</h1>
+      <a href="/" class="btn btn-outline">← Back</a>
+    </div>
+    <% if (guilds && guilds.length > 0) { %>
+      <div class="servers-grid">
+        <% guilds.forEach(g => { %>
+          <div class="server-card">
+            <h2><%= g.name %></h2>
+            <div class="server-id"><code>#<%= g.guild_id.slice(0, 8) %>...</code></div>
+            <div class="server-actions">
+              <a href="/guild/<%= g.guild_id %>" class="btn btn-primary">Open</a>
+              <a href="/guild/<%= g.guild_id %>/settings" class="btn btn-outline btn-sm">Settings</a>
+              <a href="/guild/<%= g.guild_id %>/plugins" class="btn btn-outline btn-sm">Plugins</a>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    <% } else { %>
+      <div class="card">
+        <p>No servers found. Ask the bot owner to invite it to your server or add a server config manually.</p>
+      </div>
+    <% } %>
+  </div>
+</body>
+</html>

@@ -1,0 +1,2 @@
+// Music events
+module.exports = {};

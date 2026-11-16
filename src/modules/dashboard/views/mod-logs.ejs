@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mod Logs</title>
+  <link rel="stylesheet" href="/dashboard/public/main.css">
+  <style>
+    .logs-table { overflow-x: auto; }
+    .logs-table table { width: 100%; }
+    .badge { padding: 0.25rem 0.5rem; border-radius: 3px; font-size: 0.8rem; }
+    .badge-active { background: #27ae60; color: #fff; }
+    .badge-pending { background: #f39c12; color: #fff; }
+    .btn-sm { padding: 0.25rem 0.5rem; font-size: 0.8rem; }
+    .text-muted { color: #b9c0c7; font-size: 0.85rem; }
+    .row-actions { display: flex; gap: 0.5rem; }
+  </style>
+</head>
+<body>
+  <div class="main-content">
+    <a href="/guilds" class="back-link">← Back to Servers</a>
+    <div class="page-header">
+      <h1>📋 Mod Cases</h1>
+      <a href="/guilds" class="btn btn-outline btn-sm">← All Servers</a>
+    </div>
+
+    <div class="card">
+      <div class="table-responsive">
+        <table class="logs-table">
+          <thead>
+            <tr>
+              <th>Case ID</th>
+              <th>Type</th>
+              <th>User</th>
+              <th>Reason</th>
+              <th>Issued</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (cases && cases.length > 0) { %>
+              <% cases.forEach(c => { %>
+                <tr>
+                  <td><code class="text-muted" style="font-size:0.8rem;"><%= c.case_id %></code></td>
+                  <td><span class="badge badge-<%= c.active ? 'active' : 'pending' %>"><%= c.type %></span></td>
+                  <td><%= c.username || c.user_id %></td>
+                  <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;"><%= c.reason %></td>
+                  <td><%= new Date(c.issued_at).toLocaleString() %></td>
+                  <td><span class="badge badge-<%= c.active ? 'active' : 'pending' %>"><%= c.active ? 'Active' : 'Closed' %></span></td>
+                  <td class="row-actions">
+                    <% if (c.active) { %>
+                      <form action="/guild/<%= guildId %>/mod-logs" method="POST" style="display:inline;">
+                        <input type="hidden" name="action" value="close">
+                        <input type="hidden" name="case_id" value="<%= c.case_id %>">
+                        <button type="submit" class="btn btn-sm btn-outline">Close</button>
+                      </form>
+                    <% } %>
+                    <button class="btn btn-sm btn-outline">View</button>
+                  </td>
+                </tr>
+              <% }); %>
+            <% } else { %>
+              <tr>
+                <td colspan="7" class="text-muted" style="text-align:center;padding:2rem;">No active cases.</td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Backups - Dashboard</title>
+  <link rel="stylesheet" href="/dashboard/public/main.css">
+  <style>
+    .backup-table { overflow-x: auto; }
+    .backup-table table { width: 100%; }
+    .btn-delete { color: #e74c3c; background: transparent; border: 1px solid #e74c3c; }
+    .btn-delete:hover { background: #e74c3c; color: #fff; }
+    .btn-restore { color: #27ae60; background: transparent; border: 1px solid #27ae60; }
+    .btn-restore:hover { background: #27ae60; color: #fff; }
+  </style>
+</head>
+<body>
+  <div class="main-content">
+    <a href="/guilds" class="back-link">← Back to Servers</a>
+    <div class="page-header">
+      <h1>📦 Server Backups</h1>
+      <a href="/" class="btn btn-outline btn-sm">← Dashboard</a>
+    </div>
+
+    <div class="card">
+      <div class="flex flex-wrap" style="justify-content:space-between;align-items:center;margin-bottom:1rem;">
+        <h2>Backup History</h2>
+        <form action="/guild/<%= guildId %>/backup" method="POST" style="display:inline;">
+          <button type="submit" class="btn btn-primary">Create New Backup</button>
+        </form>
+      </div>
+      <div class="table-responsive">
+        <table class="backup-table">
+          <thead>
+            <tr>
+              <th>Backup ID</th>
+              <th>Timestamp</th>
+              <th>Size</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (backups && backups.length > 0) { %>
+              <% backups.forEach(b => { %>
+                <tr>
+                  <td class="text-muted" style="font-size:0.8rem;"><%= b.backup_id %></td>
+                  <td><%= new Date(b.timestamp).toLocaleString() %></td>
+                  <td>~<%= Math.round(b.data.length / 1024) %> KB</td>
+                  <td style="display:flex;gap:0.5rem;">
+                    <form action="/guild/<%= guildId %>/restore" method="POST" style="display:inline;">
+                      <input type="hidden" name="backup_id" value="<%= b.backup_id %>">
+                      <button type="submit" class="btn btn-sm btn-restore">Restore</button>
+                    </form>
+                    <form action="/guild/<%= guildId %>/backup" method="POST" style="display:inline;">
+                      <input type="hidden" name="backup_id" value="<%= b.backup_id %>">
+                      <button type="submit" class="btn btn-sm btn-delete">Delete</button>
+                    </form>
+                  </td>
+                </tr>
+              <% }); %>
+            <% } else { %>
+              <tr>
+                <td colspan="4" class="text-muted" style="text-align:center;padding:2rem;">No backups yet.</td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

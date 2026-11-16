@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plugins - Dashboard</title>
+  <link rel="stylesheet" href="/dashboard/public/main.css">
+</head>
+<body>
+  <div class="main-content">
+    <a href="/guilds" class="back-link">← Back to Servers</a>
+    <div class="page-header">
+      <h1>🔌 Plugins</h1>
+      <a href="/" class="btn btn-outline btn-sm">← Dashboard</a>
+    </div>
+
+    <div class="card">
+      <form action="/guild/<%= guildId %>/plugins" method="POST">
+        <div class="table-responsive">
+          <table style="width:100%;">
+            <thead>
+              <tr>
+                <th>Plugin</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% plugins.forEach(p => { %>
+                <tr>
+                  <td><strong><%= p.label %></strong></td>
+                  <td class="text-muted" style="font-size:0.85rem;"><span id="desc-<%= p.name %>"></span></td>
+                  <td><span class="badge <%= p.default ? 'badge-active' : 'badge-inactive' %>"><%= p.default ? 'Active' : 'Inactive' %></span></td>
+                  <td>
+                    <label class="toggle" style="cursor:pointer;">
+                      <input type="checkbox" name="plugins[<%= p.name %>]" value="<%= p.default ? 'true' : 'false' %>" <%= p.default ? 'checked' : '' %>>
+                      <span class="slider" style="height:18px;width:36px;"></span>
+                    </label>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+        <button type="submit" class="btn btn-primary" style="margin-top:1rem;">Save Plugins</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

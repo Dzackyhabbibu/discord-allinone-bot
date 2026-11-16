@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0f1115; color: #e1e4e8; min-height: 100vh; }
+    a { color: #5865F2; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Navbar */
+    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background: #1e1f22; border-bottom: 1px solid #30363d; }
+    .navbar .logo { font-size: 1.25rem; font-weight: 700; color: #5865F2; }
+    .navbar .nav-links { display: flex; gap: 1rem; list-style: none; }
+    .navbar .nav-links li a { color: #b9c0c7; font-size: 0.9rem; padding: 0.5rem 0.75rem; border-radius: 5px; }
+    .navbar .nav-links li a:hover { background: #2D3136; color: #e1e4e8; }
+    .navbar .nav-links li.active a { color: #5865F2; font-weight: 500; }
+
+    /* Auth State */
+    .auth-banner { text-align: center; padding: 4rem 2rem; }
+    .auth-banner h1 { font-size: 2rem; margin-bottom: 1rem; }
+    .auth-banner p { color: #b9c0c7; }
+
+    /* Main Grid */
+    .dashboard-grid { display: grid; grid-template-columns: 1fr 320px; min-height: calc(100vh - 73px); }
+    @media (max-width: 900px) { .dashboard-grid { grid-template-columns: 1fr; } }
+
+    /* Main Content */
+    .main-content { padding: 1.5rem; max-width: 1200px; }
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+    .page-header h1 { font-size: 1.5rem; font-weight: 600; }
+    .btn { display: inline-block; padding: 0.5rem 1rem; border-radius: 5px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+    .btn-primary { background: #5865F2; color: #fff; }
+    .btn-primary:hover { background: #4752c4; }
+    .btn-danger { background: #e74c3c; color: #fff; }
+    .btn-success { background: #27ae60; color: #fff; }
+    .btn-outline { background: transparent; border: 1px solid #5f6368; color: #e1e4e8; }
+    .btn-outline:hover { background: #2D3136; }
+    .btn-sm { padding: 0.25rem 0.5rem; font-size: 0.8rem; }
+
+    /* Cards */
+    .card { background: #1e1f22; border: 1px solid #30363d; border-radius: 8px; padding: 1.25rem; margin-bottom: 1rem; }
+    .card h2 { font-size: 1.1rem; margin-bottom: 0.75rem; }
+    .card .stat { display: flex; justify-content: space-between; padding: 0.6rem 0; border-bottom: 1px solid #30363d; }
+    .card .stat:last-child { border-bottom: none; }
+
+    /* Tables */
+    .table-responsive { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #30363d; }
+    th { color: #b9c0c7; font-weight: 500; }
+    tr:hover td { background: #2D3136; }
+    .badge { padding: 0.25rem 0.5rem; border-radius: 3px; font-size: 0.8rem; font-weight: 500; }
+    .badge-active { background: #27ae60; color: #fff; }
+    .badge-inactive { background: #e74c3c; color: #fff; }
+
+    /* Forms */
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: 0.85rem; color: #b9c0c7; margin-bottom: 0.4rem; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.6rem 0.75rem; background: #2D3136; border: 1px solid #30363d; border-radius: 5px; color: #e1e4e8; font-family: inherit; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #5865F2; }
+
+    /* Lists */
+    .list-item { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid #30363d; }
+    .list-item:last-child { border-bottom: none; }
+    .list-item .actions { display: flex; gap: 0.5rem; }
+
+    /* Typography */
+    .text-muted { color: #b9c0c7; }
+    .text-green { color: #27ae60; }
+    .text-red { color: #e74c3c; }
+    .text-blue { color: #5865F2; }
+    .mt-1 { margin-top: 0.5rem; }
+    .mb-1 { margin-bottom: 0.5rem; }
+    .flex { display: flex; }
+    .gap-1 { gap: 0.5rem; }
+    .flex-wrap { flex-wrap: wrap; }
+
+    /* Toggle Switch */
+    .toggle { position: relative; display: inline-block; width: 44px; height: 24px; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #30363d; border-radius: 12px; transition: 0.3s; }
+    .toggle .slider::before { content: ""; position: absolute; height: 18px; width: 18px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: 0.3s; }
+    .toggle input:checked + .slider { background: #5865F2; }
+    .toggle input:checked + .slider::before { transform: translateX(20px); }
+
+    /* Modal */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; }
+    .modal.active { display: block; }
+    .modal-content { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #1e1f22; border: 1px solid #30363d; border-radius: 8px; padding: 2rem; max-width: 400px; width: 90%; }
+
+    .back-link { display: inline-block; margin-bottom: 1rem; color: #5865F2; font-size: 0.9rem; }
+    .back-link:hover { text-decoration: none; }
+
+    /* Footer */
+    .footer { text-align: center; padding: 2rem; color: #5f6368; font-size: 0.85rem; }
+
+    @media (max-width: 600px) {
+      .navbar { flex-direction: column; padding: 1rem; }
+      .navbar .nav-links { flex-wrap: wrap; justify-content: center; }
+      .page-header { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <% if (user) { %>
+  <nav class="navbar">
+    <div class="logo">🎨 Bot Dashboard</div>
+    <ul class="nav-links">
+      <li><a href="/"><%= user.global_name || user.username %>'s Server</a></li>
+      <li><a href="/guilds">Servers (<%= (typeof guilds !== 'undefined' ? guilds.length : 0) %>)</a></li>
+      <li><a href="/logout">Logout</a></li>
+    </ul>
+  </nav>
+  <div class="dashboard-grid">
+    <main class="main-content">
+      <% if (typeof message !== 'undefined') { %>
+        <div class="card"><%= message %></div>
+      <% } %>
+      <%= body %>
+    </main>
+    <aside style="background:#1e1f22; border:1px solid #30363d; border-radius:8px; padding:1.25rem; height:calc(100vh - 73px); position:sticky; top:73px;">
+      <div class="card">
+        <h2>📊 Quick Stats</h2>
+        <div class="stat"><span>Guilds</span><span id="guild-count">0</span></div>
+      </div>
+      <div class="card" style="margin-top:1rem;">
+        <h2>⚙️ Quick Settings</h2>
+        <div class="list-item"><span>Welcome</span><a href="/guild/<%= guildId || '' %>/settings" class="btn btn-sm btn-outline">Open</a></div>
+        <div class="list-item"><span>Analytics</span><a href="/guild/<%= guildId || '' %>/analytics" class="btn btn-sm btn-outline">Open</a></div>
+        <div class="list-item"><span>Mod Logs</span><a href="/guild/<%= guildId || '' %>/mod-log" class="btn btn-sm btn-outline">Open</a></div>
+        <div class="list-item"><span>Plugins</span><a href="/guild/<%= guildId || '' %>/plugins" class="btn btn-sm btn-outline">Open</a></div>
+      </div>
+    </aside>
+  </div>
+  <% } else { %>
+    <div class="auth-banner">
+      <h1>🎨 Bot Dashboard</h1>
+      <p>Login with Discord to manage your server.</p>
+      <a href="/auth/discord" class="btn btn-primary" style="margin-top:1.5rem;">Login with Discord</a>
+    </div>
+  <% } %>
+  <script>
+    // Toggle via fetch
+    document.querySelectorAll('[data-toggle]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const action = btn.dataset.toggle;
+        const form = document.getElementById('toggle-form-' + action);
+        if (form) {
+          const resp = await fetch(form.action, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new FormData(form) });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
